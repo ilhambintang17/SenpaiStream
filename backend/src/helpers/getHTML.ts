@@ -31,7 +31,26 @@ export default async function getHTML(
   // If no referer provided, pretend we came from Google
   headers.Referer = ref ? (ref.startsWith("http") ? ref : new URL(ref, baseUrl).toString()) : "https://www.google.com/";
 
-  const response = await fetch(url, { headers, redirect: "follow" });
+  // GOOGLE TRANSLATE PROXY BYPASS (Fix for Render 403)
+  // If we are scraping Otakudesu, route through Google Translate
+  let fetchUrl = url.toString();
+  if (url.hostname.includes("otakudesu")) {
+    const origin = url.hostname; // e.g. otakudesu.best
+    const proxiedHost = origin.replace(/\./g, "-") + ".translate.goog"; // otakudesu-best.translate.goog
+
+    // Deconstruct original URL
+    const originalPath = url.pathname;
+    const originalSearch = url.search; // Keep existing query params if any
+
+    // Construct Google Proxy URL
+    // Format: https://otakudesu-best.translate.goog/path?original_query&_x_tr_sl=auto&_x_tr_tl=en&_x_tr_hl=id
+    fetchUrl = `https://${proxiedHost}${originalPath}${originalSearch}${originalSearch ? "&" : "?"}_x_tr_sl=auto&_x_tr_tl=en&_x_tr_hl=id`;
+
+    // Update Host header? No, fetch handles it.
+    // console.log("Proxying via Google:", fetchUrl);
+  }
+
+  const response = await fetch(fetchUrl, { headers, redirect: "follow" });
 
   if (!response.ok) {
     response.status > 399 ? errorinCuy(response.status) : errorinCuy(404);
