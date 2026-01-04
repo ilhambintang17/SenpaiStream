@@ -1,0 +1,11 @@
+{
+    "name": "senpaistream-root",
+    "version": "1.0.0",
+    "scripts": {
+        "start": "npm start --prefix backend",
+        "heroku-postbuild": "npm install --prefix backend && npm run build --prefix backend && npm install --prefix frontend && npm run build --prefix frontend && npm install --prefix admin-panel && npm run build --prefix admin-panel"
+    },
+    "engines": {
+        "node": "18.x"
+    }
+}
