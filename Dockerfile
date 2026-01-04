@@ -25,8 +25,14 @@ RUN npm install
 # Copy source code
 COPY . .
 
+# Install Sub-project Dependencies (Explicitly)
+RUN npm install --prefix backend
+RUN npm install --prefix frontend
+RUN npm install --prefix admin-panel
+
 # Build Backend & Frontend
 RUN npm run build --prefix backend
+
 RUN npm run build --prefix frontend
 
 # Expose port
