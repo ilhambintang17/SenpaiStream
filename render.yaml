@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: animeweb-senpaistream
+    runtime: node
+    plan: free
+    buildCommand: npm run heroku-postbuild
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGO_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: ADMIN_USERNAME
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
