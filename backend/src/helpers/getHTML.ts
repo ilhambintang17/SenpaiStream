@@ -2,7 +2,7 @@ import errorinCuy from "./errorinCuy.js";
 import sanitizeHtml from "sanitize-html";
 
 export const userAgent =
-  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0";
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
 
 export default async function getHTML(
   baseUrl: string,
@@ -13,10 +13,18 @@ export default async function getHTML(
   const url = new URL(pathname, baseUrl);
   const headers: Record<string, string> = {
     "User-Agent": userAgent,
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+    "Accept-Language": "en-US,en;q=0.9,id;q=0.8",
+    "Cache-Control": "max-age=0",
+    "Sec-Fetch-Dest": "document",
+    "Sec-Fetch-Mode": "navigate",
+    "Sec-Fetch-Site": "same-origin",
+    "Sec-Fetch-User": "?1",
+    "Upgrade-Insecure-Requests": "1"
   };
 
   if (ref) {
-    headers.Refferer = ref.startsWith("http") ? ref : new URL(ref, baseUrl).toString();
+    headers.Referer = ref.startsWith("http") ? ref : new URL(ref, baseUrl).toString();
   }
 
   const response = await fetch(url, { headers, redirect: "manual" });
