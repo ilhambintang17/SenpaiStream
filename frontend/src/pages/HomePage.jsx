@@ -12,6 +12,14 @@ const HomePage = () => {
     const [currentPage, setCurrentPage] = React.useState(1);
     const [pagination, setPagination] = React.useState(null);
 
+    // Defensive Fallback: If API returns items but no pagination, we construct a fake one to allow navigation
+    const effectivePagination = pagination || {
+        hasNextPage: ongoingAnime.length > 0,
+        totalPages: 99, // Assumption
+        currentPage: currentPage,
+        note: "Fallback Mode"
+    };
+
     React.useEffect(() => {
         const fetchHomeData = async () => {
             try {
@@ -149,7 +157,7 @@ const HomePage = () => {
                     <div className="flex items-center justify-between">
                         <h2 className="text-2xl font-bold text-[#120e1b] dark:text-white flex items-center gap-2">
                             <span className="w-1.5 h-6 bg-pink-400 rounded-full block"></span>
-                            Ongoing Anime (DEBUG)
+                            Ongoing Anime (DEBUG V2)
                         </h2>
                         <Link to="/schedule" className="text-sm font-semibold text-primary hover:text-primary/80">View Calendar</Link>
                     </div>
@@ -157,7 +165,8 @@ const HomePage = () => {
                     {/* DEBUG PANEL */}
                     <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg text-xs font-mono mb-4 overflow-auto max-h-40">
                         <p>Items: {ongoingAnime.length}</p>
-                        <p>Pagination: {JSON.stringify(pagination)}</p>
+                        <p>Pagination State: {JSON.stringify(pagination)}</p>
+                        <p>Effective Pagination: {JSON.stringify(effectivePagination)}</p>
                         <p>Loading: {loading ? 'true' : 'false'}</p>
                     </div>
 
@@ -189,7 +198,7 @@ const HomePage = () => {
                             {/* Page Numbers */}
                             {(() => {
                                 const pages = [];
-                                const totalPages = pagination?.totalPages || 1;
+                                const totalPages = effectivePagination?.totalPages || 1;
                                 const showPages = 5; // Show max 5 page numbers
 
                                 let startPage = Math.max(1, currentPage - Math.floor(showPages / 2));
@@ -254,7 +263,7 @@ const HomePage = () => {
                             {/* Next Button */}
                             <button
                                 onClick={() => handlePageChange(currentPage + 1)}
-                                disabled={!pagination?.hasNextPage}
+                                disabled={!effectivePagination?.hasNextPage}
                                 className="px-4 py-2 rounded-lg bg-white dark:bg-surface-dark border border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 hover:bg-primary hover:text-white dark:hover:bg-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white dark:disabled:hover:bg-surface-dark disabled:hover:text-gray-700 dark:disabled:hover:text-gray-300"
                             >
                                 Next →
@@ -263,7 +272,7 @@ const HomePage = () => {
                     )}
 
                     {/* End Message */}
-                    {!loading && !pagination?.hasNextPage && ongoingAnime.length > 0 && (
+                    {!loading && !effectivePagination?.hasNextPage && ongoingAnime.length > 0 && (
                         <div className="text-center mt-8 text-gray-400">
                             You've reached the end!
                         </div>
