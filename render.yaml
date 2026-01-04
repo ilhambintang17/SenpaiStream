@@ -1,10 +1,8 @@
 services:
   - type: web
     name: animeweb-senpaistream
-    runtime: node
+    env: docker
     plan: free
-    buildCommand: npm run heroku-postbuild
-    startCommand: npm start
     envVars:
       - key: NODE_ENV
         value: production

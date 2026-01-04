@@ -1,5 +1,16 @@
 import errorinCuy from "./errorinCuy.js";
 import sanitizeHtml from "sanitize-html";
+import { fetch, ProxyAgent, setGlobalDispatcher } from "undici";
+
+// Auto-configure Proxy if environment variable is set (e.g. from WARP)
+if (process.env.HTTPS_PROXY || process.env.SOCKS_PROXY) {
+  const proxyUrl = process.env.HTTPS_PROXY || process.env.SOCKS_PROXY;
+  if (proxyUrl) {
+    const dispatcher = new ProxyAgent(proxyUrl);
+    setGlobalDispatcher(dispatcher);
+    console.log(`[Proxy] Global dispatcher set to: ${proxyUrl}`);
+  }
+}
 
 // Full Chrome 120 on Windows 10 Headers
 export const userAgent =

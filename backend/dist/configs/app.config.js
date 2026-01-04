@@ -2,7 +2,7 @@ const appConfig = {
     /**
      * server port
      */
-    PORT: 3001,
+    PORT: parseInt(process.env.PORT || "3001"),
     /**
      * ngilangin properti sourceUrl di response
      *

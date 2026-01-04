@@ -1,15 +1,17 @@
 import errorinCuy from "./errorinCuy.js";
 import sanitizeHtml from "sanitize-html";
-export const userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0";
+export const userAgent = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)";
 export default async function getHTML(baseUrl, pathname, ref, sanitize = false) {
     const url = new URL(pathname, baseUrl);
     const headers = {
         "User-Agent": userAgent,
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+        "Connection": "keep-alive"
     };
     if (ref) {
-        headers.Refferer = ref.startsWith("http") ? ref : new URL(ref, baseUrl).toString();
+        headers.Referer = ref.startsWith("http") ? ref : new URL(ref, baseUrl).toString();
     }
-    const response = await fetch(url, { headers, redirect: "manual" });
+    const response = await fetch(url, { headers, redirect: "follow" });
     if (!response.ok) {
         response.status > 399 ? errorinCuy(response.status) : errorinCuy(404);
     }

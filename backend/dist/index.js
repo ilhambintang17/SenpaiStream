@@ -64,12 +64,25 @@ app.get('/admin/*', (req, res) => {
     res.sendFile(path.join(__dirname, '../../admin-panel/dist/index.html'));
 });
 // Serve Frontend
-app.use(express.static(path.join(__dirname, '../../frontend/dist')));
+// Serve Frontend with custom cache headers for index.html
+app.use(express.static(path.join(__dirname, '../../frontend/dist'), {
+    setHeaders: (res, filePath) => {
+        if (filePath.endsWith('index.html')) {
+            res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+            res.setHeader('Pragma', 'no-cache');
+            res.setHeader('Expires', '0');
+        }
+    }
+}));
 app.get('*', (req, res) => {
     // Check if request is for API to avoid returning HTML for 404 API calls
     if (req.path.startsWith('/api')) {
         return res.status(404).json({ error: 'Not Found' });
     }
+    // Disable caching for index.html to ensure latest deployment is always loaded
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
     res.sendFile(path.join(__dirname, '../../frontend/dist/index.html'));
 });
 app.use(errorHandler);
