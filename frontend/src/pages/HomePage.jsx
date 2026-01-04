@@ -149,10 +149,18 @@ const HomePage = () => {
                     <div className="flex items-center justify-between">
                         <h2 className="text-2xl font-bold text-[#120e1b] dark:text-white flex items-center gap-2">
                             <span className="w-1.5 h-6 bg-pink-400 rounded-full block"></span>
-                            Sedang Tayang
+                            Ongoing Anime (DEBUG)
                         </h2>
                         <Link to="/schedule" className="text-sm font-semibold text-primary hover:text-primary/80">View Calendar</Link>
                     </div>
+
+                    {/* DEBUG PANEL */}
+                    <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg text-xs font-mono mb-4 overflow-auto max-h-40">
+                        <p>Items: {ongoingAnime.length}</p>
+                        <p>Pagination: {JSON.stringify(pagination)}</p>
+                        <p>Loading: {loading ? 'true' : 'false'}</p>
+                    </div>
+
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                         {ongoingAnime.map((anime, idx) => (
                             <AnimeCard
