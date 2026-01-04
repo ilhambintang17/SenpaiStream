@@ -16,7 +16,7 @@ const HomePage = () => {
         const fetchHomeData = async () => {
             try {
                 // Fetch ongoing anime with pagination
-                const ongoingResponse = await fetch('/api/otakudesu/ongoing?page=1');
+                const ongoingResponse = await fetch(`/api/otakudesu/ongoing?page=1&t=${Date.now()}`);
                 const ongoingResult = await ongoingResponse.json();
 
                 // Fetch completed anime for recommendations
