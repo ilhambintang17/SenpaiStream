@@ -77,7 +77,17 @@ app.get('/admin/*', (req, res) => {
 });
 
 // Serve Frontend
-app.use(express.static(path.join(__dirname, '../../frontend/dist')));
+// Serve Frontend with custom cache headers for index.html
+app.use(express.static(path.join(__dirname, '../../frontend/dist'), {
+  setHeaders: (res, filePath) => {
+    if (filePath.endsWith('index.html')) {
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+      res.setHeader('Pragma', 'no-cache');
+      res.setHeader('Expires', '0');
+    }
+  }
+}));
+
 app.get('*', (req, res) => {
   // Check if request is for API to avoid returning HTML for 404 API calls
   if (req.path.startsWith('/api')) {
