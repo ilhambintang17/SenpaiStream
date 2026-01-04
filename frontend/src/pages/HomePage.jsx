@@ -15,7 +15,9 @@ const HomePage = () => {
     // Defensive Fallback: If API returns items but no pagination, we construct a fake one to allow navigation
     const effectivePagination = pagination || {
         hasNextPage: ongoingAnime.length > 0,
-        totalPages: 99, // Assumption
+        // Don't show misleading 99. Just ensure Next works.
+        // If unknown, we can treat it as "current + 1" for UI logic or just hide numbers.
+        totalPages: (pagination?.totalPages) || (ongoingAnime.length > 0 ? currentPage + 1 : currentPage),
         currentPage: currentPage,
         note: "Fallback Mode"
     };
