@@ -1,14 +1,15 @@
 import errorinCuy from "./errorinCuy.js";
 import sanitizeHtml from "sanitize-html";
-import { fetch, ProxyAgent, setGlobalDispatcher } from "undici";
+import fetch from "node-fetch";
+import { SocksProxyAgent } from "socks-proxy-agent";
 
 // Auto-configure Proxy if environment variable is set (e.g. from WARP)
+let fetchAgent: any = undefined;
 if (process.env.HTTPS_PROXY || process.env.SOCKS_PROXY) {
   const proxyUrl = process.env.HTTPS_PROXY || process.env.SOCKS_PROXY;
-  if (proxyUrl) {
-    const dispatcher = new ProxyAgent(proxyUrl);
-    setGlobalDispatcher(dispatcher);
-    console.log(`[Proxy] Global dispatcher set to: ${proxyUrl}`);
+  if (proxyUrl && proxyUrl.startsWith("socks")) {
+    fetchAgent = new SocksProxyAgent(proxyUrl);
+    console.log(`[Proxy] Agent set to: ${proxyUrl}`);
   }
 }
 
@@ -42,7 +43,12 @@ export default async function getHTML(
   // If no referer provided, pretend we came from Google
   headers.Referer = ref ? (ref.startsWith("http") ? ref : new URL(ref, baseUrl).toString()) : "https://www.google.com/";
 
-  const response = await fetch(url, { headers, redirect: "follow" });
+  // @ts-ignore - node-fetch types mismatch with native fetch types in strict mode
+  const response = await fetch(url.toString(), {
+    headers,
+    redirect: "follow",
+    agent: fetchAgent
+  });
 
   if (!response.ok) {
     response.status > 399 ? errorinCuy(response.status) : errorinCuy(404);
