@@ -84,17 +84,24 @@ graph TD
 
 ---
 
-## � Docker Deployment
+## 🐳 Self Hosting (Docker)
 
-The application is fully containerized.
+The application is designed to be easily self-hosted on any VPS or local server.
 
 ```bash
-# Build the image
+# 1. Build the image
 docker build -t senpaistream .
 
-# Run container
-docker run -p 5000:5000 -e MONGO_URI="mongodb://host.docker.internal:27017/animeweb" senpaistream
+# 2. Run container (Daemon/Background)
+docker run -d \
+  -p 5000:5000 \
+  -e MONGO_URI="mongodb://host.docker.internal:27017/animeweb" \
+  --name senpaistream \
+  --restart always \
+  senpaistream
 ```
+
+Access your instance at `http://your-server-ip:5000`.
 
 ---
 
