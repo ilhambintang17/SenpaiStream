@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import AnimeCard from '../components/AnimeCard';
 import { Search } from 'lucide-react';
