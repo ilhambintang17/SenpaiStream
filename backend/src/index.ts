@@ -102,29 +102,6 @@ app.get('*', (req, res) => {
 
 app.use(errorHandler);
 
-app.listen(PORT, async () => {
+app.listen(PORT, () => {
   console.log(`server is running on http://localhost:${PORT}`);
-
-  // DEBUG: Check IP Address through Proxy
-  try {
-    const fetch = (await import("node-fetch")).default;
-    const { SocksProxyAgent } = await import("socks-proxy-agent");
-
-    let agent: any = undefined;
-    if (process.env.SOCKS_PROXY) {
-      agent = new SocksProxyAgent(process.env.SOCKS_PROXY);
-      console.log("[Debug] Testing Proxy connection...");
-    }
-
-    const res = await fetch("https://ifconfig.me/ip", { agent });
-    const ip = await res.text();
-    console.log(`[Debug] Current Egress IP: ${ip.trim()}`);
-
-    if (process.env.SOCKS_PROXY && !ip.includes(".")) {
-      // Basic check if we got a valid-ish response (IPv4/IPv6)
-      console.log("[Debug] Warning: IP response looks invalid: " + ip);
-    }
-  } catch (err) {
-    console.error("[Debug] Failed to check IP:", err);
-  }
 });

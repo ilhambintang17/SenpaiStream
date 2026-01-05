@@ -1,47 +1,47 @@
-FROM node:20-bullseye
-
-# Install basic dependencies
-RUN apt-get update && apt-get install -y curl gnupg lsb-release
-
-# Add Cloudflare GPG Key and Repo
-RUN curl -fsSL https://pkg.cloudflareclient.com/pubkey.gpg | gpg --yes --dearmor --output /usr/share/keyrings/cloudflare-warp-archive-keyring.gpg && \
-    echo "deb [arch=amd64 signed-by=/usr/share/keyrings/cloudflare-warp-archive-keyring.gpg] https://pkg.cloudflareclient.com/ $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/cloudflare-client.list
-
-# Install Cloudflare WARP
-RUN apt-get update && apt-get install -y cloudflare-warp
-
-# Create app directory
-WORKDIR /usr/src/app
-
-# Copy package.jsons (Root, Backend, Frontend, Admin)
-COPY package*.json ./
-COPY backend/package*.json ./backend/
-COPY frontend/package*.json ./frontend/
-COPY admin-panel/package*.json ./admin-panel/
-
-# Install dependencies (Root)
+# Stage 1: Build Backend
+FROM node:18-alpine AS backend-build
+WORKDIR /app/backend
+COPY backend/package*.json ./
 RUN npm install
+COPY backend/ ./
+RUN npm run build
 
-# Copy source code
-COPY . .
+# Stage 2: Build Frontend (User)
+FROM node:18-alpine AS frontend-build
+WORKDIR /app/frontend
+COPY frontend/package*.json ./
+RUN npm install
+COPY frontend/ ./
+# Output to /app/frontend/dist
+RUN npm run build
 
-# Install Sub-project Dependencies (Explicitly)
-RUN npm install --prefix backend
-RUN npm install --prefix frontend
-RUN npm install --prefix admin-panel
+# Stage 3: Build Admin Panel
+FROM node:18-alpine AS admin-build
+WORKDIR /app/admin-panel
+COPY admin-panel/package*.json ./
+RUN npm install
+COPY admin-panel/ ./
+# Output to /app/admin-panel/dist
+RUN npm run build
 
-# Build Backend & Frontend
-RUN npm run build --prefix backend
+# Stage 4: Production Runtime
+FROM node:18-alpine
+WORKDIR /app
 
-RUN npm run build --prefix frontend
+# Copy Backend Build
+COPY --from=backend-build /app/backend/dist ./dist
+COPY --from=backend-build /app/backend/package*.json ./
+# Install ONLY production dependencies for backend
+RUN npm install --production
 
-# Expose port
-EXPOSE 3001
+# Copy Built Frontends to where Express expects them
+# Express looks in ../frontend/dist relative to dist/index.js -> /app/frontend/dist
+COPY --from=frontend-build /app/frontend/dist ./frontend/dist
+COPY --from=admin-build /app/admin-panel/dist ./admin-panel/dist
 
-# Copy and setup entrypoint
-COPY entrypoint.sh /item/entrypoint.sh
-RUN chmod +x entrypoint.sh
+# Expose Port
+ENV PORT=5000
+EXPOSE 5000
 
-# Use entrypoint
-ENTRYPOINT ["./entrypoint.sh"]
-CMD ["npm", "start"]
+# Start Server
+CMD ["node", "dist/index.js"]
