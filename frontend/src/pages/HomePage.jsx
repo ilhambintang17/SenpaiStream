@@ -15,9 +15,7 @@ const HomePage = () => {
     // Defensive Fallback: If API returns items but no pagination, we construct a fake one to allow navigation
     const effectivePagination = pagination || {
         hasNextPage: ongoingAnime.length > 0,
-        // Don't show misleading 99. Just ensure Next works.
-        // If unknown, we can treat it as "current + 1" for UI logic or just hide numbers.
-        totalPages: (pagination?.totalPages) || (ongoingAnime.length > 0 ? currentPage + 1 : currentPage),
+        totalPages: 99, // Assumption
         currentPage: currentPage,
         note: "Fallback Mode"
     };
@@ -159,17 +157,9 @@ const HomePage = () => {
                     <div className="flex items-center justify-between">
                         <h2 className="text-2xl font-bold text-[#120e1b] dark:text-white flex items-center gap-2">
                             <span className="w-1.5 h-6 bg-pink-400 rounded-full block"></span>
-                            Ongoing Anime (DEBUG V2)
+                            Ongoing Anime
                         </h2>
                         <Link to="/schedule" className="text-sm font-semibold text-primary hover:text-primary/80">View Calendar</Link>
-                    </div>
-
-                    {/* DEBUG PANEL */}
-                    <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg text-xs font-mono mb-4 overflow-auto max-h-40">
-                        <p>Items: {ongoingAnime.length}</p>
-                        <p>Pagination State: {JSON.stringify(pagination)}</p>
-                        <p>Effective Pagination: {JSON.stringify(effectivePagination)}</p>
-                        <p>Loading: {loading ? 'true' : 'false'}</p>
                     </div>
 
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
