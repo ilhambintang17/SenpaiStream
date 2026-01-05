@@ -2,13 +2,14 @@
 import React from 'react';
 import { Play, SkipForward, Volume2, Settings, Maximize, MonitorPlay } from 'lucide-react';
 
-const VideoPlayer = ({ poster, src }) => {
+const VideoPlayer = ({ poster, src, onLoad }) => {
     return (
         <div className="relative w-full aspect-video bg-black rounded-xl overflow-hidden shadow-2xl group cursor-pointer group-hover:shadow-primary/20 transition-all">
             {/* Real Player Iframe */}
             {src ? (
                 <iframe
                     src={src}
+                    onLoad={onLoad}
                     className="w-full h-full"
                     frameBorder="0"
                     allowFullScreen

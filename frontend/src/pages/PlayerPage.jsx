@@ -23,7 +23,7 @@ const PlayerPage = () => {
     const [retryAttempt, setRetryAttempt] = useState(0);
     const [isAutoRetrying, setIsAutoRetrying] = useState(false);
     const loadTimeoutRef = useRef(null);
-    const MAX_LOAD_TIME = 8000; // 8 seconds timeout
+    const MAX_LOAD_TIME = 15000; // 15 seconds timeout (Increased for slower connections)
     const MAX_RETRIES_PER_QUALITY = 3;
 
     // Sidebar / Anime Details State
@@ -96,6 +96,15 @@ const PlayerPage = () => {
         setTimeout(() => setIsAutoRetrying(false), 1000);
     };
 
+    // If iframe loads successfully, cancel the death timer
+    const handleIframeLoad = () => {
+        console.log('[PLAYER] Iframe loaded successfully. Cancelling auto-retry timeout.');
+        if (loadTimeoutRef.current) {
+            clearTimeout(loadTimeoutRef.current);
+            loadTimeoutRef.current = null;
+        }
+    };
+
     // Start timeout monitor when stream URL changes
     useEffect(() => {
         if (streamUrl && !loadingQuality) {
@@ -104,6 +113,7 @@ const PlayerPage = () => {
                 clearTimeout(loadTimeoutRef.current);
             }
 
+            console.log(`[PLAYER] Monitoring stream health... (Timeout: ${MAX_LOAD_TIME}ms)`);
             // Set new timeout to detect blackscreen/loading issues
             loadTimeoutRef.current = setTimeout(() => {
                 handleStreamLoadTimeout();
@@ -317,7 +327,7 @@ const PlayerPage = () => {
                     )}
 
                     {streamUrl ? (
-                        <VideoPlayer key={streamUrl} src={streamUrl} />
+                        <VideoPlayer key={streamUrl} src={streamUrl} onLoad={handleIframeLoad} />
                     ) : (
                         <div className="w-full h-full bg-black flex items-center justify-center text-white flex-col gap-2">
                             {loading ? 'Loading Stream...' : 'Stream Not Available'}
