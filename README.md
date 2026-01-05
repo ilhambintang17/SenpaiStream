@@ -156,6 +156,10 @@ npm run build
 ```
 This will recompile the Backend, Frontend, and Admin Panel assets.
 
+> [!NOTE]
+> If you see errors like `vite: not found` or `sh: command not found`, it means you haven't installed dependencies yet.
+> Run **`npm run setup`** first!
+
 ---
 
 ## 🏆 Credits
