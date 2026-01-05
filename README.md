@@ -147,6 +147,17 @@ Access your instance at `http://your-server-ip:5000`.
 
 ---
 
+## 🛠️ Maintenance
+
+To rebuild the project (e.g. after pulling updates):
+
+```bash
+npm run build
+```
+This will recompile the Backend, Frontend, and Admin Panel assets.
+
+---
+
 ## 🏆 Credits
 
 Special thanks to **[Wajik45](https://github.com/wajik45/wajik-anime-api)** for the core scraping API architecture used in this project.
