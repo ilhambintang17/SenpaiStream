@@ -72,7 +72,18 @@ const HeroSection = ({ items = [] }) => {
     return (
         <section className="relative w-full rounded-2xl overflow-hidden min-h-[500px] md:min-h-[550px] flex items-end p-6 md:p-12 group shadow-xl">
             {/* High-Quality Background Image with proper <img> tag */}
+            {/* High-Quality Background Image with proper <img> tag */}
             <div className="absolute inset-0 overflow-hidden">
+                {/* Aesthetic Blur Background Layer */}
+                <img
+                    key={`blur-${currentItem.animeId}`}
+                    src={currentItem.poster}
+                    alt=""
+                    aria-hidden="true"
+                    className="absolute inset-0 w-full h-full object-cover blur-2xl scale-110 opacity-60"
+                />
+
+                {/* Main Image */}
                 <img
                     key={currentItem.animeId}
                     src={currentItem.poster}
@@ -86,8 +97,9 @@ const HeroSection = ({ items = [] }) => {
                         willChange: 'opacity'
                     }}
                 />
-                {/* Gradient Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/20"></div>
+                {/* Enhanced Gradient Overlay for Esthetic Vibe */}
+                <div className="absolute inset-0 bg-gradient-to-t from-[#120e1b] via-[#120e1b]/60 to-transparent/30 backdrop-blur-[1px]"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-[#120e1b]/80 via-transparent to-transparent"></div>
             </div>
 
             {/* Glass Content Panel */}
