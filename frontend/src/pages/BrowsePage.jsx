@@ -10,6 +10,19 @@ const BrowsePage = () => {
 
     const [animeList, setAnimeList] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [localSearch, setLocalSearch] = useState(query || '');
+
+    // Sync local input when URL query changes (e.g. from Navbar)
+    React.useEffect(() => {
+        setLocalSearch(query || '');
+    }, [query]);
+
+    // Update search params on Enter key
+    const handleSearch = (e) => {
+        if (e.key === 'Enter') {
+            setSearchParams({ q: localSearch });
+        }
+    };
 
     React.useEffect(() => {
         const fetchAnime = async () => {
@@ -59,7 +72,14 @@ const BrowsePage = () => {
             <div className="flex flex-col md:flex-row gap-4">
                 <div className="relative flex-1">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 size-5" />
-                    <input type="text" placeholder="Search anime..." className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-white/5 focus:ring-2 focus:ring-primary outline-none" />
+                    <input
+                        type="text"
+                        placeholder="Search anime..."
+                        className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-white/5 focus:ring-2 focus:ring-primary outline-none"
+                        value={localSearch}
+                        onChange={(e) => setLocalSearch(e.target.value)}
+                        onKeyDown={handleSearch}
+                    />
                 </div>
                 <select className="px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-white/5 outline-none">
                     <option>All Genres</option>
