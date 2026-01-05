@@ -2,9 +2,17 @@
 
 ![Status](https://img.shields.io/badge/status-active-success.svg) ![License](https://img.shields.io/badge/license-MIT-blue.svg) ![Tech](https://img.shields.io/badge/stack-MERN-9cf.svg)
 
-**SenpaiStream** is a premium, aesthetic anime streaming platform designed to provide a seamless and immersive viewing experience. Built with modern web technologies, it combines a glassmorphism-inspired UI with robust real-time scraping capabilities.
+**SenpaiStream** is a premium, aesthetic anime streaming platform.
 
 ![Home Preview](screenshots/home-preview.png)
+
+---
+
+## ℹ️ About
+
+**SenpaiStream** is a modern anime streaming web application built with the **MERN Stack** (MongoDB, Express, React, Node.js). It is designed to provide users with a "Premium" viewing feel through a **Glassmorphism** UI, smooth animations, and zero-ad experience.
+
+Unlike traditional static sites, SenpaiStream scrapes content in real-time, ensuring that users always get the latest episodes as soon as they are available on source providers.
 
 ---
 
