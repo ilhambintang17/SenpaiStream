@@ -1,13 +1,11 @@
 
 import React, { useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Play, Search, Bookmark, Menu, X } from 'lucide-react';
 
 const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [searchQuery, setSearchQuery] = useState('');
     const location = useLocation();
-    const navigate = useNavigate();
 
     // Helper function to check if link is active
     const isActive = (path) => {
@@ -15,13 +13,6 @@ const Navbar = () => {
             return location.pathname === '/';
         }
         return location.pathname.startsWith(path);
-    };
-
-    const handleSearch = (e) => {
-        if (e.key === 'Enter' && searchQuery.trim()) {
-            navigate(`/browse?q=${encodeURIComponent(searchQuery.trim())}`);
-            setIsMenuOpen(false); // Close mobile menu if open
-        }
     };
 
     // Helper function to get link classes
@@ -66,9 +57,11 @@ const Navbar = () => {
                                 type="text"
                                 className="block w-full min-w-[240px] p-2 pl-10 text-sm text-gray-900 border-none rounded-xl bg-white/50 focus:ring-2 focus:ring-primary/20 placeholder-primary/60 focus:bg-white transition-all outline-none"
                                 placeholder="Search anime..."
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                onKeyDown={handleSearch}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        window.location.href = `/browse?q=${e.target.value}`;
+                                    }
+                                }}
                             />
                         </div>
 
