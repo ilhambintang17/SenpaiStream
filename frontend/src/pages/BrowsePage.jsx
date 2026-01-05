@@ -1,11 +1,22 @@
 import React, { useState } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import AnimeCard from '../components/AnimeCard';
 import { Search } from 'lucide-react';
 
+const GENRES = [
+    "Action", "Adventure", "Comedy", "Demons", "Drama", "Ecchi",
+    "Fantasy", "Game", "Harem", "Historical", "Horror", "Josei",
+    "Magic", "Martial Arts", "Mecha", "Military", "Music", "Mystery",
+    "Psychological", "Parody", "Police", "Romance", "Samurai", "School",
+    "Sci-Fi", "Seinen", "Shoujo", "Shoujo Ai", "Shounen", "Shounen Ai",
+    "Slice of Life", "Space", "Sports", "Super Power", "Supernatural",
+    "Thriller", "Vampire"
+].sort();
+
 const BrowsePage = () => {
     const { genreId } = useParams();
-    const [searchParams] = useSearchParams();
+    const [searchParams, setSearchParams] = useSearchParams();
+    const navigate = useNavigate();
     const query = searchParams.get('q');
 
     const [animeList, setAnimeList] = useState([]);
@@ -21,6 +32,15 @@ const BrowsePage = () => {
     const handleSearch = (e) => {
         if (e.key === 'Enter') {
             setSearchParams({ q: localSearch });
+        }
+    };
+
+    const handleGenreChange = (e) => {
+        const selected = e.target.value;
+        if (selected === "All Genres") {
+            navigate('/browse');
+        } else {
+            navigate(`/genre/${selected.toLowerCase()}`);
         }
     };
 
@@ -81,10 +101,15 @@ const BrowsePage = () => {
                         onKeyDown={handleSearch}
                     />
                 </div>
-                <select className="px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-white/5 outline-none">
-                    <option>All Genres</option>
-                    <option>Action</option>
-                    <option>Comedy</option>
+                <select
+                    className="px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-white/5 outline-none cursor-pointer"
+                    onChange={handleGenreChange}
+                    value={genreId ? genreId.charAt(0).toUpperCase() + genreId.slice(1) : "All Genres"}
+                >
+                    <option value="All Genres">All Genres</option>
+                    {GENRES.map(g => (
+                        <option key={g} value={g}>{g}</option>
+                    ))}
                 </select>
                 <select className="px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-white/5 outline-none">
                     <option>Most Popular</option>
