@@ -1,4 +1,4 @@
-// import { clientCache } from "@middlewares/cache.js"; // Disabled for now or use in-memory
+import "dotenv/config";
 import { clientCache } from "@middlewares/cache.js";
 import appConfig from "@configs/app.config.js";
 import express from "express";
