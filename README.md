@@ -76,6 +76,33 @@ graph LR
 -   Node.js v18+
 -   MongoDB (Local or Atlas)
 
+---
+
+## ⚙️ Configuration
+
+Before running the app, you need to set up your environment variables.
+
+1.  **Copy the Example File**
+    ```bash
+    cp backend/.env.example backend/.env
+    ```
+
+2.  **Edit `backend/.env`**
+    Fill in your details:
+    ```env
+    PORT=5000
+    MONGO_URI=mongodb+srv://user:pass@cluster.mongodb.net/dbname
+    JWT_SECRET=super_secret_key_123
+    ADMIN_USERNAME=admin
+    ADMIN_PASSWORD=admin
+    ```
+
+> [!TIP]
+> **Don't have a Database?**
+> Sign up for [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) to get a **FREE 512MB Cluster** forever. Perfect for hosting this project! 🍃
+
+---
+
 ### Local Installation
 
 1.  **Clone the Repository**
