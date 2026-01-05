@@ -1,5 +1,5 @@
 # Stage 1: Build Backend
-FROM node:18-alpine AS backend-build
+FROM node:20-alpine AS backend-build
 WORKDIR /app/backend
 COPY backend/package*.json ./
 RUN npm install
@@ -7,7 +7,7 @@ COPY backend/ ./
 RUN npm run build
 
 # Stage 2: Build Frontend (User)
-FROM node:18-alpine AS frontend-build
+FROM node:20-alpine AS frontend-build
 WORKDIR /app/frontend
 COPY frontend/package*.json ./
 RUN npm install
@@ -16,7 +16,7 @@ COPY frontend/ ./
 RUN npm run build
 
 # Stage 3: Build Admin Panel
-FROM node:18-alpine AS admin-build
+FROM node:20-alpine AS admin-build
 WORKDIR /app/admin-panel
 COPY admin-panel/package*.json ./
 RUN npm install
@@ -25,7 +25,7 @@ COPY admin-panel/ ./
 RUN npm run build
 
 # Stage 4: Production Runtime
-FROM node:18-alpine
+FROM node:20-alpine
 WORKDIR /app
 
 # Copy Backend Build

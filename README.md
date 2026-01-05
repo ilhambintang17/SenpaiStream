@@ -73,7 +73,7 @@ graph LR
 ## 🚀 Getting Started
 
 ### Prerequisites
--   Node.js v18+
+-   Node.js v20+
 -   MongoDB (Local or Atlas)
 
 ---
