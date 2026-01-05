@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import HeroSection from '../components/HeroSection';
@@ -12,12 +11,11 @@ const HomePage = () => {
     const [currentPage, setCurrentPage] = React.useState(1);
     const [pagination, setPagination] = React.useState(null);
 
-    // Defensive Fallback: If API returns items but no pagination, we construct a fake one to allow navigation
+    // Defensive Fallback
     const effectivePagination = pagination || {
         hasNextPage: ongoingAnime.length > 0,
-        totalPages: 99, // Assumption
+        totalPages: null, // Don't guess 99
         currentPage: currentPage,
-        note: "Fallback Mode"
     };
 
     React.useEffect(() => {
@@ -72,8 +70,6 @@ const HomePage = () => {
             setLoading(false);
         }
     };
-
-
 
     const genres = [
         { name: 'Action', color: 'bg-[#FFCDD2] text-[#B71C1C]' },
@@ -182,81 +178,63 @@ const HomePage = () => {
                             <button
                                 onClick={() => handlePageChange(currentPage - 1)}
                                 disabled={currentPage === 1}
-                                className="px-4 py-2 rounded-lg bg-white dark:bg-surface-dark border border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 hover:bg-primary hover:text-white dark:hover:bg-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white dark:disabled:hover:bg-surface-dark disabled:hover:text-gray-700 dark:disabled:hover:text-gray-300"
+                                className="px-4 py-2 rounded-lg bg-white dark:bg-surface-dark border border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 hover:bg-primary hover:text-white dark:hover:bg-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 ← Previous
                             </button>
 
-                            {/* Page Numbers */}
-                            {(() => {
+                            {/* Page Numbers - Only show if totalPages is known */}
+                            {effectivePagination.totalPages ? (() => {
                                 const pages = [];
-                                const totalPages = effectivePagination?.totalPages || 1;
-                                const showPages = 5; // Show max 5 page numbers
+                                const totalPages = effectivePagination.totalPages;
+                                const showPages = 5;
 
                                 let startPage = Math.max(1, currentPage - Math.floor(showPages / 2));
                                 let endPage = Math.min(totalPages, startPage + showPages - 1);
 
-                                // Adjust start if we're near the end
                                 if (endPage - startPage < showPages - 1) {
                                     startPage = Math.max(1, endPage - showPages + 1);
                                 }
 
-                                // First page button
                                 if (startPage > 1) {
                                     pages.push(
-                                        <button
-                                            key={1}
-                                            onClick={() => handlePageChange(1)}
-                                            className="px-4 py-2 rounded-lg bg-white dark:bg-surface-dark border border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 hover:bg-primary hover:text-white dark:hover:bg-primary transition-colors"
-                                        >
-                                            1
-                                        </button>
+                                        <button key={1} onClick={() => handlePageChange(1)} className="px-4 py-2 rounded-lg bg-white dark:bg-surface-dark border border-gray-200 dark:border-white/10 hover:bg-primary hover:text-white transition-colors">1</button>
                                     );
-                                    if (startPage > 2) {
-                                        pages.push(<span key="dots1" className="px-2 text-gray-500">...</span>);
-                                    }
+                                    if (startPage > 2) pages.push(<span key="dots1" className="px-2 text-gray-500">...</span>);
                                 }
 
-                                // Page numbers
                                 for (let i = startPage; i <= endPage; i++) {
                                     pages.push(
                                         <button
                                             key={i}
                                             onClick={() => handlePageChange(i)}
-                                            className={`px-4 py-2 rounded-lg border transition-colors ${currentPage === i
-                                                ? 'bg-primary text-white border-primary'
-                                                : 'bg-white dark:bg-surface-dark border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 hover:bg-primary hover:text-white dark:hover:bg-primary'
-                                                }`}
+                                            className={`px-4 py-2 rounded-lg border transition-colors ${currentPage === i ? 'bg-primary text-white border-primary' : 'bg-white dark:bg-surface-dark border-gray-200 dark:border-white/10 hover:bg-primary hover:text-white'}`}
                                         >
                                             {i}
                                         </button>
                                     );
                                 }
 
-                                // Last page button
                                 if (endPage < totalPages) {
-                                    if (endPage < totalPages - 1) {
-                                        pages.push(<span key="dots2" className="px-2 text-gray-500">...</span>);
-                                    }
+                                    if (endPage < totalPages - 1) pages.push(<span key="dots2" className="px-2 text-gray-500">...</span>);
                                     pages.push(
-                                        <button
-                                            key={totalPages}
-                                            onClick={() => handlePageChange(totalPages)}
-                                            className="px-4 py-2 rounded-lg bg-white dark:bg-surface-dark border border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 hover:bg-primary hover:text-white dark:hover:bg-primary transition-colors"
-                                        >
-                                            {totalPages}
-                                        </button>
+                                        <button key={totalPages} onClick={() => handlePageChange(totalPages)} className="px-4 py-2 rounded-lg bg-white dark:bg-surface-dark border border-gray-200 dark:border-white/10 hover:bg-primary hover:text-white transition-colors">{totalPages}</button>
                                     );
                                 }
 
                                 return pages;
-                            })()}
+                            })() : (
+                                // If total pages unknown, just show current page
+                                <span className="px-4 py-2 rounded-lg bg-primary text-white border border-primary font-bold">
+                                    Page {currentPage}
+                                </span>
+                            )}
 
                             {/* Next Button */}
                             <button
                                 onClick={() => handlePageChange(currentPage + 1)}
-                                disabled={!effectivePagination?.hasNextPage}
-                                className="px-4 py-2 rounded-lg bg-white dark:bg-surface-dark border border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 hover:bg-primary hover:text-white dark:hover:bg-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white dark:disabled:hover:bg-surface-dark disabled:hover:text-gray-700 dark:disabled:hover:text-gray-300"
+                                disabled={!effectivePagination.hasNextPage && (!effectivePagination.totalPages || currentPage >= effectivePagination.totalPages)}
+                                className="px-4 py-2 rounded-lg bg-white dark:bg-surface-dark border border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 hover:bg-primary hover:text-white dark:hover:bg-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 Next →
                             </button>
