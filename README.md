@@ -54,6 +54,18 @@ graph TD
     Frontend -->|API REST| Backend[Express Server]
     Backend -->|Scrape| Source[Otakudesu/Providers]
     Backend -->|Cache/Store| DB[(MongoDB)]
+    Backend -->|Cache/Store| DB[(MongoDB)]
+```
+
+### 🔄 User Flow
+
+```mermaid
+graph LR
+    A[Landing Page] -->|Search / Filter| B[Browse Page]
+    A -->|Click Trending| C[Anime Details]
+    B -->|Select Anime| C
+    C -->|Choose Episode| D[Watch Page]
+    D -->|Stream Content| E[Video Player]
 ```
 
 ---
