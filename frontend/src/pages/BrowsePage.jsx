@@ -22,6 +22,7 @@ const BrowsePage = () => {
     const [animeList, setAnimeList] = useState([]);
     const [loading, setLoading] = useState(true);
     const [localSearch, setLocalSearch] = useState(query || '');
+    const [sortBy, setSortBy] = useState('Newest');
 
     // Sync local input when URL query changes (e.g. from Navbar)
     React.useEffect(() => {
@@ -43,6 +44,21 @@ const BrowsePage = () => {
             navigate(`/genre/${selected.toLowerCase()}`);
         }
     };
+
+    // Sorting Logic
+    const getSortedAnime = () => {
+        if (!animeList) return [];
+        let sorted = [...animeList];
+        if (sortBy === 'A-Z') {
+            sorted.sort((a, b) => a.title.localeCompare(b.title));
+        } else if (sortBy === 'Z-A') {
+            sorted.sort((a, b) => b.title.localeCompare(a.title));
+        }
+        // 'Newest' assumes default API order (which is usually date-based for scrapers)
+        return sorted;
+    };
+
+    const sortedList = getSortedAnime();
 
     React.useEffect(() => {
         const fetchAnime = async () => {
@@ -111,16 +127,20 @@ const BrowsePage = () => {
                         <option key={g} value={g}>{g}</option>
                     ))}
                 </select>
-                <select className="px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-white/5 outline-none">
-                    <option>Most Popular</option>
-                    <option>Newest</option>
-                    <option>Top Rated</option>
+                <select
+                    className="px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-white/5 outline-none cursor-pointer"
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                >
+                    <option value="Newest">Newest (Default)</option>
+                    <option value="A-Z">A-Z</option>
+                    <option value="Z-A">Z-A</option>
                 </select>
             </div>
 
             {/* Grid */}
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-                {animeList.map(anime => (
+                {sortedList.map(anime => (
                     <AnimeCard
                         key={anime.animeId}
                         id={anime.animeId}
