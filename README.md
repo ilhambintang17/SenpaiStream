@@ -105,29 +105,24 @@ Before running the app, you need to set up your environment variables.
 
 ### Local Installation
 
+### Local Installation
+
 1.  **Clone the Repository**
     ```bash
-    git clone https://github.com/your-username/animeweb.git
-    cd animeweb
+    git clone https://github.com/ilhambintang17/SenpaiStream.git
+    cd SenpaiStream
     ```
 
-2.  **Install Dependencies**
+2.  **Install All Dependencies**
     ```bash
-    # Install Root/Backends
-    cd backend && npm install
-    
-    # Install Frontend
-    cd ../frontend && npm install
+    npm run setup
     ```
 
 3.  **Run Development Server**
     ```bash
-    # Terminal A (Backend)
-    cd backend && npm run dev
-    
-    # Terminal B (Frontend)
-    cd frontend && npm run dev
+    npm run dev
     ```
+    (This starts both Backend and Frontend concurrently) 🚀
 
 ---
 
