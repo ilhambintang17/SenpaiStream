@@ -147,6 +147,12 @@ Access your instance at `http://your-server-ip:5000`.
 
 ---
 
+## 🏆 Credits
+
+Special thanks to **Wajik45** for the core scraping API architecture used in this project.
+
+---
+
 ## 🤝 Contributing
 Contributions are welcome! Please fork the repository and submit a pull request.
 
