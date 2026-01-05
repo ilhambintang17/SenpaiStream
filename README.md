@@ -149,7 +149,7 @@ Access your instance at `http://your-server-ip:5000`.
 
 ## 🏆 Credits
 
-Special thanks to **Wajik45** for the core scraping API architecture used in this project.
+Special thanks to **[Wajik45](https://github.com/wajik45/wajik-anime-api)** for the core scraping API architecture used in this project.
 
 ---
 
